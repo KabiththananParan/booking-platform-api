@@ -1,2 +1,19 @@
-# booking-platform-api
-RESTful Booking Platform API built with NestJS, PostgreSQL, Prisma, JWT Authentication, and Swagger.
+# Booking Platform API
+
+## Overview
+
+A RESTful Booking Platform API built with NestJS.
+
+## Tech Stack
+
+- NestJS
+- TypeScript
+- PostgreSQL
+- Prisma
+- JWT
+- Swagger
+- Docker
+
+## Status
+
+🚧 Project in development

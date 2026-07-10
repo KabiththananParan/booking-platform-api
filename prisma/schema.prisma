@@ -11,3 +11,41 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        Int         @id @default(autoincrement())
+  name      String
+  email     String      @unique
+  password  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+
+model Service {
+  id            Int         @id @default(autoincrement())
+  title         String
+  description   String
+  duration      Int
+  price         Decimal     @db.Decimal(10, 2)
+  isActive      Boolean     @default(true)
+  bookings      Booking[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+
+model Booking {
+  id              Int            @id @default(autoincrement())
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  bookingDate     DateTime
+  bookingTime     String
+  status          BookingStatus  @default(PENDING)
+  notes           String?
+  serviceID       Int
+  service         Service        @relation(fields: [serviceId], references: [id])
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}

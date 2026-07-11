@@ -13,25 +13,27 @@ datasource db {
 }
 
 model User {
-  id        Int         @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String      @unique
+  email     String    @unique
   password  String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  services  Service[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
-
 model Service {
-  id            Int         @id @default(autoincrement())
-  title         String
-  description   String
-  duration      Int
-  price         Decimal     @db.Decimal(10, 2)
-  isActive      Boolean     @default(true)
-  bookings      Booking[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  duration    Int
+  price       Decimal   @db.Decimal(10, 2)
+  isActive    Boolean   @default(true)
+  bookings    Booking[]
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 enum BookingStatus {
@@ -41,18 +43,17 @@ enum BookingStatus {
   COMPLETED
 }
 
-
 model Booking {
-  id              Int            @id @default(autoincrement())
-  customerName    String
-  customerEmail   String
-  customerPhone   String
-  bookingDate     DateTime
-  bookingTime     String
-  status          BookingStatus  @default(PENDING)
-  notes           String?
-  serviceID       Int
-  service         Service        @relation(fields: [serviceID], references: [id])
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  id            Int           @id @default(autoincrement())
+  customerName  String
+  customerEmail String
+  customerPhone String
+  bookingDate   DateTime
+  bookingTime   String
+  status        BookingStatus @default(PENDING)
+  notes         String?
+  serviceId     Int
+  service       Service       @relation(fields: [serviceId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }

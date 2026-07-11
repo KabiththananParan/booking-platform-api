@@ -1,7 +1,7 @@
 export class AuthResponseDto {
-  readonly accessToken!: string;
+  accessToken!: string;
 
-  readonly user!: {
+  user!: {
     id: number;
     name: string;
     email: string;

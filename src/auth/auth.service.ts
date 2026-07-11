@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client'; 
 import { RegisterDto } from './dto/register.dto';
+import { RegisterResponseDto } from './dto/register-response.dto';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 
@@ -11,7 +12,7 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<User> {
+  async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     const existingUser = await this.usersService.findByEmail(registerDto.email);
 
     if (existingUser) {
@@ -26,7 +27,14 @@ export class AuthService {
         password: hashedPassword,
     };
 
-    return this.usersService.createUser(createUserData);
+    const createdUser = await this.usersService.createUser(createUserData);
+    const response = new RegisterResponseDto();
+    response.id = createdUser.id;
+    response.name = createdUser.name;
+    response.email = createdUser.email;
+
+    return response;
+
     
   }
 }

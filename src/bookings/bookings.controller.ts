@@ -15,7 +15,10 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { Query } from '@nestjs/common';
 import { BookingQueryDto } from './dto/booking-query.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth()
+@ApiTags('Bookings')
 @Controller('bookings')
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}

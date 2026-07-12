@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: booking_platform_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/booking_platform_db
+      JWT_SECRET: your-super-secret-key
+      JWT_EXPIRES_IN: 1d
+      PORT: 3000
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

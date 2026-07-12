@@ -5,6 +5,7 @@ import { Booking } from '@prisma/client';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { BookingStatus } from '@prisma/client';
+import { BookingQueryDto } from './dto/booking-query.dto';
 
 @Injectable()
 export class BookingsService {
@@ -48,8 +49,44 @@ export class BookingsService {
       },
     });
   }
-  async findAll(): Promise<Booking[]> {
-    return this.prisma.booking.findMany();
+  async findAll(bookingQueryDto: BookingQueryDto): Promise<Booking[]> {
+    const { page = 1, limit = 10, search, status } = bookingQueryDto;
+
+    const skip = (page - 1) * limit;
+
+    return this.prisma.booking.findMany({
+      where: {
+        ...(status && { status }),
+
+        ...(search && {
+          OR: [
+            {
+              customerName: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              customerEmail: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              customerPhone: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        }),
+      },
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
   async findOne(id: number): Promise<Booking> {
     const booking = await this.prisma.booking.findUnique({

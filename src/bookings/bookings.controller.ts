@@ -13,6 +13,8 @@ import { Booking } from '@prisma/client';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
+import { Query } from '@nestjs/common';
+import { BookingQueryDto } from './dto/booking-query.dto';
 
 @Controller('bookings')
 export class BookingsController {
@@ -24,8 +26,8 @@ export class BookingsController {
   }
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<Booking[]> {
-    return this.bookingsService.findAll();
+  findAll(@Query() bookingQueryDto: BookingQueryDto): Promise<Booking[]> {
+    return this.bookingsService.findAll(bookingQueryDto);
   }
   @UseGuards(JwtAuthGuard)
   @Get(':id')
